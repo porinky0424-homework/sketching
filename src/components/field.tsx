@@ -3,32 +3,34 @@ import IconicElement from './iconicElement'
 import { Position } from '../constants/types/position'
 
 export interface Info {
+  id: number
   position: Position
 }
 
 export default function Field() {
-  const [infos, setInfos] = useState<Map<number, Info>>(new Map())
-  const [elemntsCount, setElementsCount] = useState<number>(0)
+  const [infos, setInfos] = useState<Info[]>([{id: 1, position: {x:0, y:0}}])
+  const [elemntsCount, setElementsCount] = useState<number>(1)
 
-  const setInfo = (info: Info) => {
-    infos.set(elemntsCount + 1, info)
+  const setInfo = (info: Omit<Info, 'id'>) => {
+    setInfos(cur => [...cur, {id: elemntsCount+1, ...info}])
     setElementsCount(cur => cur + 1)
   }
 
   const setPosition = ({ id, position }: {id: number, position: Position}) => {
-    const info = infos.get(id)
-    infos.set(id, {...info, position})
+    setInfos(infos.map((info) => (
+      (info.id === id) ? {...info, position} : info
+    )))
   }
 
   useEffect(() => {
-    setInfo({position: {x:0, y:0}})
-  }, [])
+    console.log(infos)
+  }, [infos])
 
   return (
     <>
     {
-      Array.from(infos).map(([id, info]) => {
-        return <IconicElement key={id} id={id} info={info} iconicElementShape='circle' />
+      infos.map((info) => {
+        return <IconicElement key={info.id} info={info} iconicElementShape='circle' setPosition={setPosition} />
       })
     }
     </>
