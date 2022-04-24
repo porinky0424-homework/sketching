@@ -28,7 +28,7 @@ export default function Field() {
     <>
     {
       Array.from(infos).map(([id, info]) => {
-        return <IconicElement id={id} info={info} iconicElementShape='circle' />
+        return <IconicElement key={id} id={id} info={info} iconicElementShape='circle' />
       })
     }
     </>
