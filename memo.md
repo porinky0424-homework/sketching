@@ -23,3 +23,9 @@ react-draggableの公式によると
 ```
 
 らしいので、一旦無視する。
+
+## 進捗
+
+- 環境構築(react with typescript, Material UI)
+- ドラッグ&ドロップできる、四角、丸のiconic elementsの作成(react-draggable)
+- ボタンを押すと1つのiconic elementsを作成できるようにした
