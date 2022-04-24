@@ -1,9 +1,9 @@
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import React, {useEffect} from 'react'
 import { Position } from '../constants/types/position';
-import { Info } from './field'
+import { Info, IconicElementShape } from './field'
 
-type IconicElementShape = 'circle' | 'rectangle' | 'triangle'
+
 
 interface Props {
   info: Info
@@ -12,10 +12,19 @@ interface Props {
 }
 
 export default function IconicElement({ info, iconicElementShape, setPosition }: Props) {
-
   const onStop = (e: DraggableEvent, data: DraggableData) => {
     console.log({x: data.lastX, y: data.lastY})
     setPosition({id: info.id, position: {x: data.lastX, y: data.lastY}})
+  }
+
+  const style: any = {width: 50, height: 50, border: 'solid 3px red', cursor: 'pointer'}
+
+  switch (iconicElementShape) {
+    case 'circle':
+      style.borderRadius = '50%'
+      break;
+    case 'rectangle':
+      break;
   }
 
   return (
@@ -23,7 +32,7 @@ export default function IconicElement({ info, iconicElementShape, setPosition }:
       position={{x: info.position.x, y: info.position.y}}
       onStop={onStop}
     >
-      <div style={{width: 50, height: 50, borderRadius: '50%', border: 'solid 3px red', cursor: 'pointer'}} />
+      <div style={style} />
     </Draggable>
   );
 }

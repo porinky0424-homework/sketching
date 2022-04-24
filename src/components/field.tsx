@@ -2,13 +2,16 @@ import React, { useEffect, useState } from 'react'
 import IconicElement from './iconicElement'
 import { Position } from '../constants/types/position'
 
+export type IconicElementShape = 'circle' | 'rectangle'
+
 export interface Info {
   id: number
+  iconicElementShape: IconicElementShape
   position: Position
 }
 
 export default function Field() {
-  const [infos, setInfos] = useState<Info[]>([{id: 1, position: {x:0, y:0}}])
+  const [infos, setInfos] = useState<Info[]>([{id: 1, iconicElementShape: 'rectangle', position: {x:0, y:0}}])
   const [elemntsCount, setElementsCount] = useState<number>(1)
 
   const setInfo = (info: Omit<Info, 'id'>) => {
@@ -30,7 +33,7 @@ export default function Field() {
     <>
     {
       infos.map((info) => {
-        return <IconicElement key={info.id} info={info} iconicElementShape='circle' setPosition={setPosition} />
+        return <IconicElement key={info.id} info={info} iconicElementShape={info.iconicElementShape} setPosition={setPosition} />
       })
     }
     </>
