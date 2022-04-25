@@ -29,3 +29,5 @@ react-draggableの公式によると
 - 環境構築(react with typescript, Material UI)
 - ドラッグ&ドロップできる、四角、丸のiconic elementsの作成(react-draggable)
 - ボタンを押すと1つのiconic elementsを作成できるようにした
+- listを作成できるようにした
+- listの中にiconic elementsが含まれているか判定できるようにした
