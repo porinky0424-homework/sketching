@@ -10,17 +10,16 @@ import IconicElement from './iconicElement'
 import { Position } from '../constants/types/position'
 
 interface HeaderProps {
-  onCircleButtonClicked: () => void
-  onRectangleButtonClicked: () => void
+  onIconicElementButtonClicked: (iconicElementShape: IconicElementShape) => void
 }
 
-function Header({ onCircleButtonClicked, onRectangleButtonClicked }: HeaderProps) {
+function Header({ onIconicElementButtonClicked }: HeaderProps) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
-          <Button color="inherit" onClick={onCircleButtonClicked}>generate <Typography sx={{ fontSize: '40px' }}>●</Typography></Button>
-          <Button color="inherit" onClick={onRectangleButtonClicked}>generate <Typography sx={{ fontSize: '40px' }}>■</Typography></Button>
+          <Button color="inherit" onClick={() => onIconicElementButtonClicked('circle')}>generate <Typography sx={{ fontSize: '40px' }}>●</Typography></Button>
+          <Button color="inherit" onClick={() => onIconicElementButtonClicked('rectangle')}>generate <Typography sx={{ fontSize: '40px' }}>■</Typography></Button>
         </Toolbar>
       </AppBar>
     </Box>
@@ -28,42 +27,45 @@ function Header({ onCircleButtonClicked, onRectangleButtonClicked }: HeaderProps
 }
 
 export type IconicElementShape = 'circle' | 'rectangle'
+export type ListShape = 'circle' | 'rectangle'
 
-export interface Info {
+export interface IconicElementInfo {
   id: number
   iconicElementShape: IconicElementShape
   position: Position
 }
 
-export default function Field() {
-  const [infos, setInfos] = useState<Info[]>([])
-  const [elemntsCount, setElementsCount] = useState<number>(0)
+export interface ListInfo {
+  id: number
+  ListShape: ListShape
+  position: Position
+}
 
-  const setInfo = (info: Omit<Info, 'id'>) => {
-    setInfos(cur => [...cur, {id: elemntsCount+1, ...info}])
-    setElementsCount(cur => cur + 1)
+export default function Field() {
+  const [iconicElementInfos, setIconicElementInfos] = useState<IconicElementInfo[]>([])
+  const [iconicElementsCount, setIconicElementsCount] = useState<number>(0)
+
+  const registerIconicElement = (info: Omit<IconicElementInfo, 'id'>) => {
+    setIconicElementInfos(cur => [...cur, {id: iconicElementsCount+1, ...info}])
+    setIconicElementsCount(cur => cur + 1)
   }
 
-  const setPosition = ({ id, position }: {id: number, position: Position}) => {
-    setInfos(infos.map((info) => (
+  const setIconicElementPosition = ({ id, position }: {id: number, position: Position}) => {
+    setIconicElementInfos(iconicElementInfos.map((info) => (
       (info.id === id) ? {...info, position} : info
     )))
   }
 
-  const onCircleButtonClicked = () => {
-    setInfo({iconicElementShape: 'circle', position: {x:0, y:0}})
-  }
-
-  const onRectangleButtonClicked = () => {
-    setInfo({iconicElementShape: 'rectangle', position: {x:0, y:0}})
+  const onIconicElementButtonClicked = (iconicElementShape: IconicElementShape) => {
+    registerIconicElement({iconicElementShape, position: {x:100, y:200}})
   }
 
   return (
     <>
-      <Header onCircleButtonClicked={onCircleButtonClicked} onRectangleButtonClicked={onRectangleButtonClicked} />
+      <Header onIconicElementButtonClicked={onIconicElementButtonClicked} />
       {
-        infos.map((info) => {
-          return <IconicElement key={info.id} info={info} iconicElementShape={info.iconicElementShape} setPosition={setPosition} />
+        iconicElementInfos.map((info) => {
+          return <IconicElement key={info.id} info={info} iconicElementShape={info.iconicElementShape} setPosition={setIconicElementPosition} />
         })
       }
     </>
