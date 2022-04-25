@@ -206,6 +206,8 @@ export default function Field() {
     updateListHas(iconicElementInfo.id, prevBelongsTo, newBelongsTo);
   };
 
+  console.log(iconicElementInfos[0]?.position, listInfos[0]?.position);
+
   return (
     <>
       <Header

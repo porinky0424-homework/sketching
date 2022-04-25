@@ -56,8 +56,8 @@ export default function List({ info, listShape, setListPosition }: Props) {
 
   const numberCircleStyle: any = {
     position: "absolute",
-    left: LIST_WIDTH * 0.25,
-    top: LIST_HEIGHT * 0.25,
+    left: LIST_WIDTH * 0.75,
+    top: LIST_HEIGHT * 0.75,
     width: NUMBER_CIRCLE_WIDTH,
     height: NUMBER_CIRCLE_HEIGHT,
     backgroundColor: "blue",
@@ -72,8 +72,7 @@ export default function List({ info, listShape, setListPosition }: Props) {
       position={{ x: info.position.x, y: info.position.y }}
       onStop={onStop}
     >
-      <div>
-        <div style={mainStyle} />
+      <div style={mainStyle}>
         <div style={numberCircleStyle}>
           <p style={{ color: "white", fontSize: "30px" }}>{info.has.length}</p>
         </div>
