@@ -1,5 +1,5 @@
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
-import React from "react";
+import React, { useState } from "react";
 import { Position } from "../constants/types/position";
 import { ListInfo, ListShape } from "./field";
 import {
@@ -10,6 +10,7 @@ import {
   WIDTH as NUMBER_CIRCLE_WIDTH,
   HEIGHT as NUMBER_CIRCLE_HEIGHT,
 } from "../constants/sizes/numberCircle";
+import { Button, Menu, MenuItem, Divider } from "@mui/material";
 
 const DEFAULT_POSITION = {
   x: 0,
@@ -49,10 +50,6 @@ export default function List({
   };
 
   const onDrag = (e: DraggableEvent, data: DraggableData) => {
-    setListPosition({
-      id: info.id,
-      position: { x: data.x, y: data.y },
-    });
     info.has.forEach((id) => {
       shiftIconicElementPosition({
         id,
@@ -90,6 +87,19 @@ export default function List({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+    "&:hover": {
+      backgroundColor: "skyblue",
+    },
+  };
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
   };
 
   return (
@@ -99,9 +109,24 @@ export default function List({
       onDrag={onDrag}
     >
       <div style={mainStyle}>
-        <div style={numberCircleStyle}>
+        <Button sx={numberCircleStyle} onClick={handleMenuOpen}>
           <p style={{ color: "white", fontSize: "30px" }}>{info.has.length}</p>
-        </div>
+        </Button>
+        <Menu
+          id="demo-customized-menu"
+          MenuListProps={{
+            "aria-labelledby": "demo-customized-button",
+          }}
+          anchorEl={anchorEl}
+          open={!!anchorEl}
+          onClose={handleMenuClose}
+        >
+          <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
+          <MenuItem onClick={handleMenuClose}>Duplicate</MenuItem>
+          <Divider sx={{ my: 0.5 }} />
+          <MenuItem onClick={handleMenuClose}>Archive</MenuItem>
+          <MenuItem onClick={handleMenuClose}>More</MenuItem>
+        </Menu>
       </div>
     </Draggable>
   );
