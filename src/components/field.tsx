@@ -103,6 +103,34 @@ export default function Field() {
     setListsCount((cur) => cur + 1);
   };
 
+  const shiftIconicElementPosition = ({
+    id,
+    positionDiff,
+  }: {
+    id: number;
+    positionDiff: Position;
+  }) => {
+    const prevPosition = iconicElementInfos.find(
+      (info) => info.id === id
+    )?.position;
+    if (prevPosition === undefined) {
+      throw new Error("");
+    }
+    setIconicElementInfos((cur) =>
+      cur.map((info) =>
+        info.id === id
+          ? {
+              ...info,
+              position: {
+                x: prevPosition.x + positionDiff.x,
+                y: prevPosition.y + positionDiff.y,
+              },
+            }
+          : info
+      )
+    );
+  };
+
   const setListPosition = ({
     id,
     position,
@@ -171,7 +199,6 @@ export default function Field() {
   ) => {
     setListInfos((cur) =>
       cur.map((listInfo) => {
-        console.log(listInfo.has);
         if (listInfo.id === prevBelongsTo) {
           listInfo.has = listInfo.has.filter((id) => id !== iconicElementId);
         }
@@ -180,7 +207,6 @@ export default function Field() {
             listInfo.has.push(iconicElementId);
           }
         }
-        console.log(listInfo.has);
         return listInfo;
       })
     );
@@ -193,8 +219,6 @@ export default function Field() {
       (info) => info.id === iconicElementInfo.id
     )?.belongsTo;
 
-    console.log(newBelongsTo, prevBelongsTo);
-
     setIconicElementInfos(
       iconicElementInfos.map((info) =>
         info.id === iconicElementInfo.id
@@ -205,8 +229,6 @@ export default function Field() {
 
     updateListHas(iconicElementInfo.id, prevBelongsTo, newBelongsTo);
   };
-
-  console.log(iconicElementInfos[0]?.position, listInfos[0]?.position);
 
   return (
     <>
@@ -220,6 +242,7 @@ export default function Field() {
           info={info}
           listShape={info.listShape}
           setListPosition={setListPosition}
+          shiftIconicElementPosition={shiftIconicElementPosition}
         />
       ))}
       {iconicElementInfos.map((info) => (

@@ -26,13 +26,38 @@ interface Props {
     id: number;
     position: Position;
   }) => void;
+  shiftIconicElementPosition: ({
+    id,
+    positionDiff,
+  }: {
+    id: number;
+    positionDiff: Position;
+  }) => void;
 }
 
-export default function List({ info, listShape, setListPosition }: Props) {
+export default function List({
+  info,
+  listShape,
+  setListPosition,
+  shiftIconicElementPosition,
+}: Props) {
   const onStop = (e: DraggableEvent, data: DraggableData) => {
     setListPosition({
       id: info.id,
       position: { x: data.lastX, y: data.lastY },
+    });
+  };
+
+  const onDrag = (e: DraggableEvent, data: DraggableData) => {
+    setListPosition({
+      id: info.id,
+      position: { x: data.x, y: data.y },
+    });
+    info.has.forEach((id) => {
+      shiftIconicElementPosition({
+        id,
+        positionDiff: { x: data.deltaX, y: data.deltaY },
+      });
     });
   };
 
@@ -71,6 +96,7 @@ export default function List({ info, listShape, setListPosition }: Props) {
     <Draggable
       position={{ x: info.position.x, y: info.position.y }}
       onStop={onStop}
+      onDrag={onDrag}
     >
       <div style={mainStyle}>
         <div style={numberCircleStyle}>

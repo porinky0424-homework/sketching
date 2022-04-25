@@ -46,7 +46,10 @@ export default function IconicElement({
 
   return (
     <Draggable
-      position={{ x: info.position.x, y: info.position.y }}
+      position={{
+        x: info.position.x,
+        y: info.position.y,
+      }}
       onStop={onStop}
     >
       <div style={style} />
