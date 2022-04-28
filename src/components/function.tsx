@@ -1,11 +1,21 @@
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Position } from "../constants/types/position";
-import { ListInfo, ListShape } from "./field";
 import {
-  WIDTH as LIST_WIDTH,
-  HEIGHT as LIST_HEIGHT,
-} from "../constants/sizes/list";
+  CalculationType,
+  calculationTypes,
+  FunctionInfo,
+  FunctionShape,
+  ListInfo,
+} from "./field";
+import {
+  SMALL_WIDTH,
+  SMALL_HEIGHT,
+  MEDIUM_WIDTH,
+  MEDIUM_HEIGHT,
+  LARGE_WIDTH,
+  LARGE_HEIGHT,
+} from "../constants/sizes/function";
 import {
   WIDTH as NUMBER_CIRCLE_WIDTH,
   HEIGHT as NUMBER_CIRCLE_HEIGHT,
@@ -22,116 +32,117 @@ const DEFAULT_POSITION = {
 };
 
 interface Props {
-  info: ListInfo;
-  listShape: ListShape;
-  setListPosition: ({
+  info: FunctionInfo;
+  functionShape: FunctionShape;
+  setFunctionPosition: ({
     id,
     position,
   }: {
     id: number;
     position: Position;
   }) => void;
-  setListName: ({
+  setFunctionName: ({
     id,
     name,
   }: {
-    id: ListInfo["id"];
-    name: ListInfo["name"];
+    id: FunctionInfo["id"];
+    name: FunctionInfo["name"];
   }) => void;
-  setListAbstractionLevel: ({
+  setFunctionResult: ({
     id,
-    abstractionLevel,
+    result,
   }: {
-    id: ListInfo["id"];
-    abstractionLevel: ListInfo["abstractionLevel"];
+    id: FunctionInfo["id"];
+    result: FunctionInfo["result"];
   }) => void;
-  shiftIconicElementPosition: ({
+  setFunctionCalculationType: ({
     id,
-    positionDiff,
+    caluclationType,
   }: {
-    id: number;
-    positionDiff: Position;
+    id: FunctionInfo["id"];
+    caluclationType: FunctionInfo["caluclationType"];
   }) => void;
-  updateList: (listInfo: ListInfo) => void;
+  calculate: (
+    listId_1: ListInfo["id"],
+    listId_2: ListInfo["id"],
+    calculationType: CalculationType
+  ) => number;
 }
 
-export default function List({
+export default function Function({
   info,
-  listShape,
-  setListPosition,
-  setListName,
-  setListAbstractionLevel,
-  shiftIconicElementPosition,
-  updateList,
+  functionShape,
+  setFunctionPosition,
+  setFunctionName,
+  setFunctionResult,
+  setFunctionCalculationType,
+  calculate,
 }: Props) {
   const onStop = (e: DraggableEvent, data: DraggableData) => {
-    updateList({
-      ...info,
+    setFunctionPosition({
+      id: info.id,
       position: { x: data.lastX, y: data.lastY },
     });
   };
 
-  const onDrag = (e: DraggableEvent, data: DraggableData) => {
-    info.has.forEach((id) => {
-      shiftIconicElementPosition({
-        id,
-        positionDiff: { x: data.deltaX, y: data.deltaY },
+  useEffect(() => {
+    if (info.has.length >= 2) {
+      setFunctionResult({
+        id: info.id,
+        result: calculate(info.has[0], info.has[1], info.caluclationType),
       });
-    });
-  };
+    } else {
+      setFunctionResult({
+        id: info.id,
+        result: undefined,
+      });
+    }
+  }, [calculate, info, setFunctionResult]);
 
   const originalStyle: any = {
     position: "absolute",
-    left: DEFAULT_POSITION.x - LIST_WIDTH / 2, // 基準点を図形の中心にずらす
-    top: DEFAULT_POSITION.y - LIST_HEIGHT / 2, // 基準点を図形の中心にずらす
-    width: LIST_WIDTH,
-    height: LIST_HEIGHT,
-    border: "solid 3px blue",
+    left: DEFAULT_POSITION.x - SMALL_WIDTH / 2, // 基準点を図形の中心にずらす
+    top: DEFAULT_POSITION.y - SMALL_HEIGHT / 2, // 基準点を図形の中心にずらす
+    width: SMALL_WIDTH,
+    height: SMALL_HEIGHT,
+    border: "solid 3px green",
     cursor: "pointer",
   };
 
-  const abstractedStyle: any = {
-    position: "absolute",
-    left: DEFAULT_POSITION.x - LIST_WIDTH / 2, // 基準点を図形の中心にずらす
-    top: DEFAULT_POSITION.y - LIST_HEIGHT / 2, // 基準点を図形の中心にずらす
-  };
-
-  switch (listShape) {
-    case "circle":
-      originalStyle.borderRadius = "50%";
-      break;
-    case "rectangle":
+  switch (functionShape) {
+    // TODO
+    default:
       break;
   }
 
   const numberCircleStyle: any = {
     position: "absolute",
-    left: LIST_WIDTH * 0.75,
-    top: LIST_HEIGHT * 0.75,
+    left: SMALL_WIDTH * 0.92,
+    top: SMALL_HEIGHT * 0.75,
     width: NUMBER_CIRCLE_WIDTH,
     height: NUMBER_CIRCLE_HEIGHT,
-    backgroundColor: "blue",
+    backgroundColor: "green",
     borderRadius: "50%",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     "&:hover": {
-      backgroundColor: "skyblue",
+      backgroundColor: "#509378",
     },
   };
 
   const nameCircleStyle: any = {
     position: "absolute",
-    left: -LIST_WIDTH * 0.2,
-    top: 0,
+    left: -SMALL_WIDTH * 0.1,
+    top: -SMALL_HEIGHT * 0.1,
     width: NAME_CIRCLE_WIDTH,
     height: NAME_CIRCLE_HEIGHT,
-    backgroundColor: "blue",
+    backgroundColor: "green",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     "&:hover": {
-      backgroundColor: "skyblue",
+      backgroundColor: "#509378",
     },
   };
 
@@ -160,24 +171,13 @@ export default function List({
     <Draggable
       position={{ x: info.position.x, y: info.position.y }}
       onStop={onStop}
-      onDrag={onDrag}
     >
-      <div
-        style={
-          info.abstractionLevel === "original" ? originalStyle : abstractedStyle
-        }
-      >
-        {info.abstractionLevel === "original" && (
-          <div style={nameCircleStyle}>
-            <p style={{ color: "white" }}>{info.name}</p>
-          </div>
-        )}
+      <div style={originalStyle}>
+        <div style={nameCircleStyle}>
+          <p style={{ color: "white" }}>{info.name}</p>
+        </div>
         <Button sx={numberCircleStyle} onDoubleClick={handleMenuOpen}>
-          <p style={{ color: "white", fontSize: "20px" }}>
-            {info.abstractionLevel === "original"
-              ? info.has.length
-              : `${info.name} = ${info.has.length}`}
-          </p>
+          <p style={{ color: "white" }}>{info.result ?? "?"}</p>
         </Button>
         <Menu
           id="demo-customized-menu"
@@ -204,35 +204,24 @@ export default function List({
               variant="filled"
               defaultValue={info.name}
               onChange={(e) => {
-                setListName({ id: info.id, name: e.target.value });
+                setFunctionName({ id: info.id, name: e.target.value });
               }}
             />
           </Menu>
           <Divider sx={{ my: 0.5 }} />
-          {info.abstractionLevel === "original" && (
+          {calculationTypes.map((calculationTypesItem) => (
             <MenuItem
               onClick={() => {
-                setListAbstractionLevel({
+                setFunctionCalculationType({
                   id: info.id,
-                  abstractionLevel: "abstracted",
+                  caluclationType: calculationTypesItem,
                 });
+                handleMenuClose();
               }}
             >
-              To Abstract
+              {calculationTypesItem}
             </MenuItem>
-          )}
-          {info.abstractionLevel === "abstracted" && (
-            <MenuItem
-              onClick={() => {
-                setListAbstractionLevel({
-                  id: info.id,
-                  abstractionLevel: "original",
-                });
-              }}
-            >
-              To Original
-            </MenuItem>
-          )}
+          ))}
         </Menu>
       </div>
     </Draggable>
