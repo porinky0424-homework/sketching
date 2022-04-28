@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import {
+  AppBar,
+  Box,
+  Button,
+  Toolbar,
+  Typography,
+  Drawer,
+  Divider,
+} from "@mui/material";
 import IconicElement from "./iconicElement";
 import List from "./list";
 import Function from "./function";
@@ -11,7 +19,7 @@ import {
 } from "../constants/sizes/list";
 import { SMALL_HEIGHT, SMALL_WIDTH } from "../constants/sizes/function";
 
-interface HeaderProps {
+interface SideMenuProps {
   onIconicElementButtonClicked: (
     iconicElementShape: IconicElementShape
   ) => void;
@@ -19,64 +27,136 @@ interface HeaderProps {
   onFunctionButtonClicked: (functionShape: FunctionShape) => void;
 }
 
-function Header({
+function SideMenu({
   onIconicElementButtonClicked,
   onListButtonClicked,
   onFunctionButtonClicked,
-}: HeaderProps) {
+}: SideMenuProps) {
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" sx={{ display: "flex" }}>
-        <Toolbar>
-          <Typography sx={{ mr: 1, height: "100%" }}>
-            generate iconic elements →
-          </Typography>
-          <Button
-            color="inherit"
-            sx={{ height: "40px" }}
-            onClick={() => onIconicElementButtonClicked("circle")}
-          >
-            <Typography sx={{ fontSize: "25px" }}>🔴</Typography>
-          </Button>
-          <Button
-            color="inherit"
-            sx={{ height: "40px", mr: 3 }}
-            onClick={() => onIconicElementButtonClicked("rectangle")}
-          >
-            <Typography sx={{ fontSize: "25px" }}>⬛️</Typography>
-          </Button>
+    <Drawer
+      variant="permanent"
+      sx={{
+        display: { xs: "none", sm: "block" },
+        "& .MuiDrawer-paper": {
+          width: "200px",
+          bgcolor: "rgb(0 0 0 / 12%)",
+        },
+      }}
+      open
+    >
+      <Box sx={{ py: 2, display: "flex", flexDirection: "column" }}>
+        <Typography sx={{ mr: 1, mb: 1, fontWeight: "bold" }}>
+          Iconic Elements
+        </Typography>
+        <Button
+          sx={{ height: "40px" }}
+          onClick={() => onIconicElementButtonClicked("circle")}
+        >
+          <div
+            style={{
+              width: "30px",
+              height: "30px",
+              margin: "6px 0",
+              backgroundColor: "red",
+              borderRadius: "50%",
+            }}
+          />
+        </Button>
+        <Button
+          sx={{ height: "40px" }}
+          onClick={() => onIconicElementButtonClicked("rectangle")}
+        >
+          <div
+            style={{
+              width: "30px",
+              height: "30px",
+              margin: "6px 0",
+              backgroundColor: "red",
+            }}
+          />
+        </Button>
+      </Box>
 
-          <Typography sx={{ mr: 1, height: "100%" }}>
-            generate lists →
-          </Typography>
-          <Button
-            color="inherit"
-            sx={{ height: "40px" }}
-            onClick={() => onListButtonClicked("circle")}
-          >
-            <Typography sx={{ fontSize: "25px" }}>🔴</Typography>
-          </Button>
-          <Button
-            color="inherit"
-            sx={{ height: "40px", mr: 3 }}
-            onClick={() => onListButtonClicked("rectangle")}
-          >
-            <Typography sx={{ fontSize: "25px" }}>⬛️</Typography>
-          </Button>
+      <Divider />
 
-          <Typography sx={{ mr: 1, height: "100%" }}>
-            generate functions →
-          </Typography>
-          <Button
-            color="inherit"
-            sx={{ height: "40px" }}
-            onClick={() => onFunctionButtonClicked("small")}
-          >
-            <Typography sx={{ fontSize: "25px" }}>🔴</Typography>
-          </Button>
-        </Toolbar>
-      </AppBar>
-    </Box>
+      <Box sx={{ py: 2, display: "flex", flexDirection: "column" }}>
+        <Typography sx={{ mr: 1, mb: 1, fontWeight: "bold" }}>Lists</Typography>
+        <Button
+          sx={{ height: "40px" }}
+          onClick={() => onListButtonClicked("circle")}
+        >
+          <div
+            style={{
+              width: "30px",
+              height: "30px",
+              margin: "6px 0",
+              backgroundColor: "blue",
+              borderRadius: "50%",
+            }}
+          />
+        </Button>
+        <Button
+          sx={{ height: "40px" }}
+          onClick={() => onListButtonClicked("rectangle")}
+        >
+          <div
+            style={{
+              width: "30px",
+              height: "30px",
+              margin: "6px 0",
+              backgroundColor: "blue",
+            }}
+          />
+        </Button>
+      </Box>
+
+      <Divider />
+
+      <Box sx={{ py: 2, display: "flex", flexDirection: "column" }}>
+        <Typography sx={{ mr: 1, mb: 1, fontWeight: "bold" }}>
+          Functions
+        </Typography>
+        <Button
+          sx={{ height: "40px" }}
+          onClick={() => onFunctionButtonClicked("small")}
+        >
+          <div
+            style={{
+              width: "30px",
+              height: "15px",
+              margin: "6px 0",
+              backgroundColor: "green",
+            }}
+          />
+        </Button>
+        <Button
+          sx={{ height: "40px" }}
+          onClick={() => onFunctionButtonClicked("medium")}
+        >
+          <div
+            style={{
+              width: "50px",
+              height: "15px",
+              margin: "6px 0",
+              backgroundColor: "green",
+            }}
+          />
+        </Button>
+        <Button
+          sx={{ height: "40px" }}
+          onClick={() => onFunctionButtonClicked("large")}
+        >
+          <div
+            style={{
+              width: "70px",
+              height: "15px",
+              margin: "6px 0",
+              backgroundColor: "green",
+            }}
+          />
+        </Button>
+      </Box>
+    </Drawer>
   );
 }
 
@@ -267,7 +347,7 @@ export default function Field() {
   ) => {
     registerIconicElement({
       iconicElementShape,
-      position: { x: 100, y: 200 },
+      position: { x: 300, y: 200 },
       belongsTo: undefined,
     });
   };
@@ -276,7 +356,7 @@ export default function Field() {
     registerList({
       name: "anonymous",
       listShape,
-      position: { x: 100, y: 200 },
+      position: { x: 500, y: 200 },
       has: [],
       abstractionLevel: "original",
       belongsTo: undefined,
@@ -287,7 +367,7 @@ export default function Field() {
     registerFunction({
       name: "anonymous",
       functionShape,
-      position: { x: 100, y: 200 },
+      position: { x: 800, y: 200 },
       has: [],
       caluclationType: "addition",
       result: undefined,
@@ -417,7 +497,6 @@ export default function Field() {
 
   const updateList = (listInfo: ListInfo) => {
     const newBelongsTo = getFunctionId(listInfo);
-    console.log(newBelongsTo);
 
     const prevBelongsTo = listInfos.find(
       (info) => info.id === listInfo.id
@@ -461,8 +540,8 @@ export default function Field() {
   };
 
   return (
-    <>
-      <Header
+    <Box sx={{ display: "flex" }}>
+      <SideMenu
         onIconicElementButtonClicked={onIconicElementButtonClicked}
         onListButtonClicked={onListButtonClicked}
         onFunctionButtonClicked={onFunctionButtonClicked}
@@ -506,6 +585,6 @@ export default function Field() {
           )
         );
       })}
-    </>
+    </Box>
   );
 }
