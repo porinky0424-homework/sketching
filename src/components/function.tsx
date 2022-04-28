@@ -1,5 +1,5 @@
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Position } from "../constants/types/position";
 import {
   CalculationType,
@@ -48,13 +48,6 @@ interface Props {
     id: FunctionInfo["id"];
     name: FunctionInfo["name"];
   }) => void;
-  setFunctionResult: ({
-    id,
-    result,
-  }: {
-    id: FunctionInfo["id"];
-    result: FunctionInfo["result"];
-  }) => void;
   setFunctionCalculationType: ({
     id,
     caluclationType,
@@ -74,7 +67,6 @@ export default function Function({
   functionShape,
   setFunctionPosition,
   setFunctionName,
-  setFunctionResult,
   setFunctionCalculationType,
   calculate,
 }: Props) {
@@ -85,19 +77,10 @@ export default function Function({
     });
   };
 
-  useEffect(() => {
-    if (info.has.length >= 2) {
-      setFunctionResult({
-        id: info.id,
-        result: calculate(info.has[0], info.has[1], info.caluclationType),
-      });
-    } else {
-      setFunctionResult({
-        id: info.id,
-        result: undefined,
-      });
-    }
-  }, [calculate, info, setFunctionResult]);
+  let result;
+  if (info.has.length >= 2) {
+    result = calculate(info.has[0], info.has[1], info.caluclationType);
+  }
 
   let functionWidth, functionHeight;
 
@@ -190,7 +173,7 @@ export default function Function({
           <p style={{ color: "white" }}>{info.name}</p>
         </div>
         <Button sx={numberCircleStyle} onDoubleClick={handleMenuOpen}>
-          <p style={{ color: "white" }}>{info.result ?? "?"}</p>
+          <p style={{ color: "white" }}>{result ?? "?"}</p>
         </Button>
         <Menu
           id="demo-customized-menu"

@@ -192,7 +192,6 @@ export interface FunctionInfo {
   position: Position;
   has: ListInfo["id"][];
   caluclationType: CalculationType;
-  result: number | undefined;
 }
 
 export default function Field() {
@@ -315,18 +314,6 @@ export default function Field() {
     );
   };
 
-  const setFunctionResult = ({
-    id,
-    result,
-  }: {
-    id: FunctionInfo["id"];
-    result: FunctionInfo["result"];
-  }) => {
-    setFunctionInfos(
-      functionInfos.map((info) => (info.id === id ? { ...info, result } : info))
-    );
-  };
-
   const setFunctionCalculationType = ({
     id,
     caluclationType,
@@ -369,7 +356,6 @@ export default function Field() {
       position: { x: 800, y: 200 },
       has: [],
       caluclationType: "addition",
-      result: undefined,
     });
   };
 
@@ -493,6 +479,8 @@ export default function Field() {
         return functionInfo;
       })
     );
+
+    console.log(functionInfos);
   };
 
   const updateIconicElement = (iconicElementInfo: IconicElementInfo) => {
@@ -557,6 +545,8 @@ export default function Field() {
     }
   };
 
+  console.log("<component>field");
+
   return (
     <Box sx={{ display: "flex" }}>
       <SideMenu
@@ -571,7 +561,6 @@ export default function Field() {
           functionShape={info.functionShape}
           setFunctionPosition={setFunctionPosition}
           setFunctionName={setFunctionName}
-          setFunctionResult={setFunctionResult}
           setFunctionCalculationType={setFunctionCalculationType}
           calculate={calculate}
         />
