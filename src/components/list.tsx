@@ -10,7 +10,11 @@ import {
   WIDTH as NUMBER_CIRCLE_WIDTH,
   HEIGHT as NUMBER_CIRCLE_HEIGHT,
 } from "../constants/sizes/numberCircle";
-import { Button, Menu, MenuItem, Divider } from "@mui/material";
+import {
+  WIDTH as NAME_CIRCLE_WIDTH,
+  HEIGHT as NAME_CIRCLE_HEIGHT,
+} from "../constants/sizes/nameCircle";
+import { Button, Menu, MenuItem, Divider, TextField } from "@mui/material";
 
 const DEFAULT_POSITION = {
   x: 0,
@@ -27,6 +31,20 @@ interface Props {
     id: number;
     position: Position;
   }) => void;
+  setListName: ({
+    id,
+    name,
+  }: {
+    id: ListInfo["id"];
+    name: ListInfo["name"];
+  }) => void;
+  setListAbstractionLevel: ({
+    id,
+    abstractionLevel,
+  }: {
+    id: ListInfo["id"];
+    abstractionLevel: ListInfo["abstractionLevel"];
+  }) => void;
   shiftIconicElementPosition: ({
     id,
     positionDiff,
@@ -40,6 +58,8 @@ export default function List({
   info,
   listShape,
   setListPosition,
+  setListName,
+  setListAbstractionLevel,
   shiftIconicElementPosition,
 }: Props) {
   const onStop = (e: DraggableEvent, data: DraggableData) => {
@@ -58,7 +78,7 @@ export default function List({
     });
   };
 
-  const mainStyle: any = {
+  const originalStyle: any = {
     position: "absolute",
     left: DEFAULT_POSITION.x - LIST_WIDTH / 2, // 基準点を図形の中心にずらす
     top: DEFAULT_POSITION.y - LIST_HEIGHT / 2, // 基準点を図形の中心にずらす
@@ -68,9 +88,15 @@ export default function List({
     cursor: "pointer",
   };
 
+  const abstractedStyle: any = {
+    position: "absolute",
+    left: DEFAULT_POSITION.x - LIST_WIDTH / 2, // 基準点を図形の中心にずらす
+    top: DEFAULT_POSITION.y - LIST_HEIGHT / 2, // 基準点を図形の中心にずらす
+  };
+
   switch (listShape) {
     case "circle":
-      mainStyle.borderRadius = "50%";
+      originalStyle.borderRadius = "50%";
       break;
     case "rectangle":
       break;
@@ -92,14 +118,40 @@ export default function List({
     },
   };
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const nameCircleStyle: any = {
+    position: "absolute",
+    left: -LIST_WIDTH * 0.2,
+    top: 0,
+    width: NAME_CIRCLE_WIDTH,
+    height: NAME_CIRCLE_HEIGHT,
+    backgroundColor: "blue",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    "&:hover": {
+      backgroundColor: "skyblue",
+    },
+  };
+
+  const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null);
+  const [editNameAnchorEl, setEditNameAnchorEl] = useState<null | HTMLElement>(
+    null
+  );
 
   const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
+    setMenuAnchorEl(event.currentTarget);
   };
 
   const handleMenuClose = () => {
-    setAnchorEl(null);
+    setMenuAnchorEl(null);
+  };
+
+  const handleEditNameOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setEditNameAnchorEl(event.currentTarget);
+  };
+
+  const handleEditNameClose = () => {
+    setEditNameAnchorEl(null);
   };
 
   return (
@@ -108,24 +160,77 @@ export default function List({
       onStop={onStop}
       onDrag={onDrag}
     >
-      <div style={mainStyle}>
+      <div
+        style={
+          info.abstractionLevel === "original" ? originalStyle : abstractedStyle
+        }
+      >
+        {info.abstractionLevel === "original" && (
+          <div style={nameCircleStyle}>
+            <p style={{ color: "white" }}>{info.name}</p>
+          </div>
+        )}
         <Button sx={numberCircleStyle} onClick={handleMenuOpen}>
-          <p style={{ color: "white", fontSize: "30px" }}>{info.has.length}</p>
+          <p style={{ color: "white", fontSize: "20px" }}>
+            {info.abstractionLevel === "original"
+              ? info.has.length
+              : `${info.name} = ${info.has.length}`}
+          </p>
         </Button>
         <Menu
           id="demo-customized-menu"
           MenuListProps={{
             "aria-labelledby": "demo-customized-button",
           }}
-          anchorEl={anchorEl}
-          open={!!anchorEl}
+          anchorEl={menuAnchorEl}
+          open={!!menuAnchorEl}
           onClose={handleMenuClose}
         >
-          <MenuItem onClick={handleMenuClose}>Edit</MenuItem>
-          <MenuItem onClick={handleMenuClose}>Duplicate</MenuItem>
+          <MenuItem onClick={handleEditNameOpen}>Edit a name</MenuItem>
+          <Menu
+            id="demo-customized-menu"
+            MenuListProps={{
+              "aria-labelledby": "demo-customized-button",
+            }}
+            anchorEl={editNameAnchorEl}
+            open={!!editNameAnchorEl}
+            onClose={handleEditNameClose}
+          >
+            <TextField
+              id="filled-basic"
+              label="Filled"
+              variant="filled"
+              defaultValue={info.name}
+              onChange={(e) => {
+                setListName({ id: info.id, name: e.target.value });
+              }}
+            />
+          </Menu>
           <Divider sx={{ my: 0.5 }} />
-          <MenuItem onClick={handleMenuClose}>Archive</MenuItem>
-          <MenuItem onClick={handleMenuClose}>More</MenuItem>
+          {info.abstractionLevel === "original" && (
+            <MenuItem
+              onClick={() => {
+                setListAbstractionLevel({
+                  id: info.id,
+                  abstractionLevel: "abstracted",
+                });
+              }}
+            >
+              To Abstract
+            </MenuItem>
+          )}
+          {info.abstractionLevel === "abstracted" && (
+            <MenuItem
+              onClick={() => {
+                setListAbstractionLevel({
+                  id: info.id,
+                  abstractionLevel: "original",
+                });
+              }}
+            >
+              To Original
+            </MenuItem>
+          )}
         </Menu>
       </div>
     </Draggable>

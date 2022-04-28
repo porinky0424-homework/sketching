@@ -68,6 +68,8 @@ function Header({
 export type IconicElementShape = "circle" | "rectangle";
 export type ListShape = "circle" | "rectangle";
 
+export type AbstractionLevel = "original" | "abstracted";
+
 export interface IconicElementInfo {
   id: number;
   iconicElementShape: IconicElementShape;
@@ -77,9 +79,11 @@ export interface IconicElementInfo {
 
 export interface ListInfo {
   id: number;
+  name: string;
   listShape: ListShape;
   position: Position;
   has: IconicElementInfo["id"][];
+  abstractionLevel: AbstractionLevel;
 }
 
 export default function Field() {
@@ -143,6 +147,32 @@ export default function Field() {
     );
   };
 
+  const setListName = ({
+    id,
+    name,
+  }: {
+    id: ListInfo["id"];
+    name: ListInfo["name"];
+  }) => {
+    setListInfos(
+      listInfos.map((info) => (info.id === id ? { ...info, name } : info))
+    );
+  };
+
+  const setListAbstractionLevel = ({
+    id,
+    abstractionLevel,
+  }: {
+    id: ListInfo["id"];
+    abstractionLevel: ListInfo["abstractionLevel"];
+  }) => {
+    setListInfos(
+      listInfos.map((info) =>
+        info.id === id ? { ...info, abstractionLevel } : info
+      )
+    );
+  };
+
   const onIconicElementButtonClicked = (
     iconicElementShape: IconicElementShape
   ) => {
@@ -154,7 +184,13 @@ export default function Field() {
   };
 
   const onListButtonClicked = (listShape: ListShape) => {
-    registerList({ listShape, position: { x: 100, y: 200 }, has: [] });
+    registerList({
+      name: "anonymous",
+      listShape,
+      position: { x: 100, y: 200 },
+      has: [],
+      abstractionLevel: "original",
+    });
   };
 
   // 配置的にiconicElementがlistに含まれうるかどうかを計算する
@@ -242,17 +278,26 @@ export default function Field() {
           info={info}
           listShape={info.listShape}
           setListPosition={setListPosition}
+          setListName={setListName}
+          setListAbstractionLevel={setListAbstractionLevel}
           shiftIconicElementPosition={shiftIconicElementPosition}
         />
       ))}
-      {iconicElementInfos.map((info) => (
-        <IconicElement
-          key={info.id}
-          info={info}
-          iconicElementShape={info.iconicElementShape}
-          updateIconicElement={updateIconicElement}
-        />
-      ))}
+      {iconicElementInfos.map((info) => {
+        const list = listInfos.find(
+          (listInfo) => listInfo.id === info.belongsTo
+        );
+        return (
+          list?.abstractionLevel !== "abstracted" && (
+            <IconicElement
+              key={info.id}
+              info={info}
+              iconicElementShape={info.iconicElementShape}
+              updateIconicElement={updateIconicElement}
+            />
+          )
+        );
+      })}
     </>
   );
 }
