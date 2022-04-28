@@ -10,6 +10,10 @@ import {
   HEIGHT as LIST_HEIGHT,
 } from "../constants/sizes/list";
 import {
+  WIDTH as NUMBER_CIRCLE_WIDTH,
+  HEIGHT as NUMBER_CIRCLE_HEIGHT,
+} from "../constants/sizes/numberCircle";
+import {
   LARGE_HEIGHT,
   LARGE_WIDTH,
   MEDIUM_HEIGHT,
@@ -380,7 +384,7 @@ export default function Field() {
     throw new Error("Invalid listShape");
   };
 
-  // 配置的にlistがfunctionに含まれうるかどうかを計算する
+  // 配置的にlist（のnumberCircleの中心）がfunctionに含まれうるかどうかを計算する
   const isListIncludedInFunction = (
     listInfo: ListInfo,
     functionInfo: FunctionInfo
@@ -404,9 +408,17 @@ export default function Field() {
         throw new Error("Invalid functionShape.");
     }
     return (
-      Math.abs(functionInfo.position.x - listInfo.position.x) <
+      Math.abs(
+        functionInfo.position.x -
+          (listInfo.position.x + LIST_WIDTH * 0.25 + NUMBER_CIRCLE_WIDTH * 0.5)
+      ) <
         functionWidth / 2 &&
-      Math.abs(functionInfo.position.y - listInfo.position.y) <
+      Math.abs(
+        functionInfo.position.y -
+          (listInfo.position.y +
+            LIST_HEIGHT * 0.25 +
+            NUMBER_CIRCLE_HEIGHT * 0.5)
+      ) <
         functionHeight / 2
     );
   };
