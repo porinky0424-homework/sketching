@@ -170,7 +170,7 @@ export default function List({
             <p style={{ color: "white" }}>{info.name}</p>
           </div>
         )}
-        <Button sx={numberCircleStyle} onClick={handleMenuOpen}>
+        <Button sx={numberCircleStyle} onDoubleClick={handleMenuOpen}>
           <p style={{ color: "white", fontSize: "20px" }}>
             {info.abstractionLevel === "original"
               ? info.has.length
