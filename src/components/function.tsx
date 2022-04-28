@@ -99,26 +99,39 @@ export default function Function({
     }
   }, [calculate, info, setFunctionResult]);
 
+  let functionWidth, functionHeight;
+
+  switch (functionShape) {
+    case "small":
+      functionWidth = SMALL_WIDTH;
+      functionHeight = SMALL_HEIGHT;
+      break;
+    case "medium":
+      functionWidth = MEDIUM_WIDTH;
+      functionHeight = MEDIUM_HEIGHT;
+      break;
+    case "large":
+      functionWidth = LARGE_WIDTH;
+      functionHeight = LARGE_HEIGHT;
+      break;
+    default:
+      throw new Error("Invalid functionShape.");
+  }
+
   const originalStyle: any = {
     position: "absolute",
-    left: DEFAULT_POSITION.x - SMALL_WIDTH / 2, // 基準点を図形の中心にずらす
-    top: DEFAULT_POSITION.y - SMALL_HEIGHT / 2, // 基準点を図形の中心にずらす
-    width: SMALL_WIDTH,
-    height: SMALL_HEIGHT,
+    left: DEFAULT_POSITION.x - functionWidth / 2, // 基準点を図形の中心にずらす
+    top: DEFAULT_POSITION.y - functionHeight / 2, // 基準点を図形の中心にずらす
+    width: functionWidth,
+    height: functionHeight,
     border: "solid 3px green",
     cursor: "pointer",
   };
 
-  switch (functionShape) {
-    // TODO
-    default:
-      break;
-  }
-
   const numberCircleStyle: any = {
     position: "absolute",
-    left: SMALL_WIDTH * 0.92,
-    top: SMALL_HEIGHT * 0.75,
+    left: functionWidth * 0.92,
+    top: functionHeight * 0.75,
     width: NUMBER_CIRCLE_WIDTH,
     height: NUMBER_CIRCLE_HEIGHT,
     backgroundColor: "green",
@@ -133,8 +146,8 @@ export default function Function({
 
   const nameCircleStyle: any = {
     position: "absolute",
-    left: -SMALL_WIDTH * 0.1,
-    top: -SMALL_HEIGHT * 0.1,
+    left: -functionWidth * 0.1,
+    top: -functionHeight * 0.1,
     width: NAME_CIRCLE_WIDTH,
     height: NAME_CIRCLE_HEIGHT,
     backgroundColor: "green",
@@ -218,6 +231,7 @@ export default function Function({
                 });
                 handleMenuClose();
               }}
+              key={calculationTypesItem}
             >
               {calculationTypesItem}
             </MenuItem>

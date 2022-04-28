@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import {
-  AppBar,
-  Box,
-  Button,
-  Toolbar,
-  Typography,
-  Drawer,
-  Divider,
-} from "@mui/material";
+import { Box, Button, Typography, Drawer, Divider } from "@mui/material";
 import IconicElement from "./iconicElement";
 import List from "./list";
 import Function from "./function";
@@ -17,7 +9,14 @@ import {
   WIDTH as LIST_WIDTH,
   HEIGHT as LIST_HEIGHT,
 } from "../constants/sizes/list";
-import { SMALL_HEIGHT, SMALL_WIDTH } from "../constants/sizes/function";
+import {
+  LARGE_HEIGHT,
+  LARGE_WIDTH,
+  MEDIUM_HEIGHT,
+  MEDIUM_WIDTH,
+  SMALL_HEIGHT,
+  SMALL_WIDTH,
+} from "../constants/sizes/function";
 
 interface SideMenuProps {
   onIconicElementButtonClicked: (
@@ -38,7 +37,7 @@ function SideMenu({
       sx={{
         display: { xs: "none", sm: "block" },
         "& .MuiDrawer-paper": {
-          width: "200px",
+          width: "160px",
           bgcolor: "rgb(0 0 0 / 12%)",
         },
       }}
@@ -400,10 +399,29 @@ export default function Field() {
     listInfo: ListInfo,
     functionInfo: FunctionInfo
   ): boolean => {
+    let functionWidth, functionHeight;
+
+    switch (functionInfo.functionShape) {
+      case "small":
+        functionWidth = SMALL_WIDTH;
+        functionHeight = SMALL_HEIGHT;
+        break;
+      case "medium":
+        functionWidth = MEDIUM_WIDTH;
+        functionHeight = MEDIUM_HEIGHT;
+        break;
+      case "large":
+        functionWidth = LARGE_WIDTH;
+        functionHeight = LARGE_HEIGHT;
+        break;
+      default:
+        throw new Error("Invalid functionShape.");
+    }
     return (
       Math.abs(functionInfo.position.x - listInfo.position.x) <
-        SMALL_WIDTH / 2 &&
-      Math.abs(functionInfo.position.y - listInfo.position.y) < SMALL_HEIGHT / 2
+        functionWidth / 2 &&
+      Math.abs(functionInfo.position.y - listInfo.position.y) <
+        functionHeight / 2
     );
   };
 
