@@ -344,7 +344,7 @@ export default function Field() {
 
   const onListButtonClicked = (listShape: ListShape) => {
     registerList({
-      name: `List${listsCount}`,
+      name: `List${listsCount + 1}`,
       listShape,
       position: { x: 500, y: 200 },
       has: [],
@@ -355,7 +355,7 @@ export default function Field() {
 
   const onFunctionButtonClicked = (functionShape: FunctionShape) => {
     registerFunction({
-      name: `Func${functionsCount}`,
+      name: `Func${functionsCount + 1}`,
       functionShape,
       position: { x: 800, y: 200 },
       has: [],
