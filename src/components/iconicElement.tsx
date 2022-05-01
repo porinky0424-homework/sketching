@@ -121,13 +121,10 @@ export default function IconicElement({
           },
         });
 
-        const newOriginX = points[value].x;
-        const newOriginY = points[value].y;
-
         setPoints(
           points.map((point) => ({
-            x: point.x - newOriginX,
-            y: point.y - newOriginY,
+            x: point.x - points[value].x,
+            y: point.y - points[value].y,
           }))
         );
       } else {
@@ -138,6 +135,13 @@ export default function IconicElement({
             y: points[0].y + info.position.y,
           },
         });
+
+        setPoints(
+          points.map((point) => ({
+            x: point.x - points[0].x,
+            y: point.y - points[0].y,
+          }))
+        );
       }
     }
   }, [alignedId, alignedType, getValue()]);
