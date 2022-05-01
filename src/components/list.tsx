@@ -202,8 +202,7 @@ export default function List({
           >
             <TextField
               id="filled-basic"
-              label="Filled"
-              variant="filled"
+              label="list name"
               defaultValue={info.name}
               onChange={(e) => {
                 setListName({ id: info.id, name: e.target.value });

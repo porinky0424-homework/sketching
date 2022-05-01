@@ -198,8 +198,7 @@ export default function Function({
           >
             <TextField
               id="filled-basic"
-              label="Filled"
-              variant="filled"
+              label="function name"
               defaultValue={info.name}
               onChange={(e) => {
                 setFunctionName({ id: info.id, name: e.target.value });
