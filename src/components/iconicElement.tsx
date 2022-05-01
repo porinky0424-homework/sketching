@@ -112,6 +112,7 @@ export default function IconicElement({
     if (alignedId !== undefined) {
       const value = getValue();
       if (value !== undefined && value >= 0 && value < points.length) {
+        console.log(info.position);
         updateIconicElement({
           ...info,
           position: {
@@ -129,6 +130,14 @@ export default function IconicElement({
             y: point.y - newOriginY,
           }))
         );
+      } else {
+        updateIconicElement({
+          ...info,
+          position: {
+            x: points[0].x + info.position.x,
+            y: points[0].y + info.position.y,
+          },
+        });
       }
     }
   }, [alignedId, alignedType, getValue()]);
@@ -159,8 +168,6 @@ export default function IconicElement({
       }
     });
   };
-
-  console.log(alignedId);
 
   switch (iconicElementShape) {
     case "circle":

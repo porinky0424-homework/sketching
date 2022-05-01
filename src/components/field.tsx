@@ -491,8 +491,6 @@ export default function Field() {
         return functionInfo;
       })
     );
-
-    console.log(functionInfos);
   };
 
   const updateIconicElement = (iconicElementInfo: IconicElementInfo) => {
