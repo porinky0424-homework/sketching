@@ -177,7 +177,6 @@ export interface IconicElementInfo {
   iconicElementShape: IconicElementShape;
   position: Position;
   belongsTo: ListInfo["id"] | undefined;
-  alignedListId: ListInfo["id"] | undefined;
 }
 
 export interface ListInfo {
@@ -340,7 +339,6 @@ export default function Field() {
       iconicElementShape,
       position: { x: 300, y: 200 },
       belongsTo: undefined,
-      alignedListId: undefined,
     });
   };
 
@@ -559,12 +557,6 @@ export default function Field() {
     }
   };
 
-  const getListNames = (): Partial<ListInfo>[] =>
-    listInfos.map((listInfo) => ({ id: listInfo.id, name: listInfo.name }));
-
-  const getListValue = (listId: ListInfo["id"] | undefined) =>
-    listInfos.find((listInfo) => listInfo.id === listId)?.has.length;
-
   console.log("<component>field");
 
   return (
@@ -608,8 +600,9 @@ export default function Field() {
               info={info}
               iconicElementShape={info.iconicElementShape}
               updateIconicElement={updateIconicElement}
-              getListNames={getListNames}
-              getListValue={getListValue}
+              listInfos={listInfos}
+              functionInfos={functionInfos}
+              calculate={calculate}
             />
           )
         );

@@ -1,6 +1,12 @@
 import Draggable, { DraggableData, DraggableEvent } from "react-draggable";
 import React, { useEffect, useState } from "react";
-import { IconicElementInfo, IconicElementShape, ListInfo } from "./field";
+import {
+  CalculationType,
+  FunctionInfo,
+  IconicElementInfo,
+  IconicElementShape,
+  ListInfo,
+} from "./field";
 import { WIDTH, HEIGHT } from "../constants/sizes/iconicElement";
 import { Menu, MenuItem } from "@mui/material";
 import { Position } from "../constants/types/position";
@@ -14,16 +20,22 @@ interface Props {
   info: IconicElementInfo;
   iconicElementShape: IconicElementShape;
   updateIconicElement: (iconicElementInfo: IconicElementInfo) => void;
-  getListNames: () => Partial<ListInfo>[];
-  getListValue: (listId: ListInfo["id"] | undefined) => number | undefined;
+  listInfos: ListInfo[];
+  functionInfos: FunctionInfo[];
+  calculate: (
+    listId_1: ListInfo["id"],
+    listId_2: ListInfo["id"],
+    calculationType: CalculationType
+  ) => number;
 }
 
 export default function IconicElement({
   info,
   iconicElementShape,
   updateIconicElement,
-  getListNames,
-  getListValue,
+  listInfos,
+  functionInfos,
+  calculate,
 }: Props) {
   const onStop = (e: DraggableEvent, data: DraggableData) => {
     updateIconicElement({
@@ -65,34 +77,61 @@ export default function IconicElement({
     setPathMenuAnchorEl(null);
   };
 
-  const listNames = getListNames();
-  const alignedListValue = getListValue(info.alignedListId);
+  const [alignedId, setAlignedId] = useState<
+    ListInfo["id"] | FunctionInfo["id"] | undefined
+  >(undefined);
+  const [alignedType, setAlignedType] = useState<
+    "list" | "function" | undefined
+  >(undefined);
+
+  const getValue = () => {
+    if (alignedType === "list") {
+      return listInfos.find((listInfo) => listInfo.id === alignedId)?.has
+        .length;
+    } else if (alignedType === "function") {
+      const functionInfo = functionInfos.find(
+        (functionInfo) => functionInfo.id === alignedId
+      );
+      if (functionInfo === undefined) {
+        return undefined;
+      }
+      let result;
+      if (functionInfo.has.length >= 2) {
+        result = calculate(
+          functionInfo.has[0],
+          functionInfo.has[1],
+          functionInfo?.caluclationType
+        );
+      }
+      return result;
+    }
+    return undefined;
+  };
 
   useEffect(() => {
-    if (
-      alignedListValue !== undefined &&
-      alignedListValue >= 0 &&
-      alignedListValue < points.length
-    ) {
-      updateIconicElement({
-        ...info,
-        position: {
-          x: points[alignedListValue].x + info.position.x,
-          y: points[alignedListValue].y + info.position.y,
-        },
-      });
+    if (alignedId !== undefined) {
+      const value = getValue();
+      if (value !== undefined && value >= 0 && value < points.length) {
+        updateIconicElement({
+          ...info,
+          position: {
+            x: points[value].x + info.position.x,
+            y: points[value].y + info.position.y,
+          },
+        });
 
-      const newOriginX = points[alignedListValue].x;
-      const newOriginY = points[alignedListValue].y;
+        const newOriginX = points[value].x;
+        const newOriginY = points[value].y;
 
-      setPoints(
-        points.map((point) => ({
-          x: point.x - newOriginX,
-          y: point.y - newOriginY,
-        }))
-      );
+        setPoints(
+          points.map((point) => ({
+            x: point.x - newOriginX,
+            y: point.y - newOriginY,
+          }))
+        );
+      }
     }
-  }, [alignedListValue]);
+  }, [alignedId, alignedType, getValue()]);
 
   // クリックした位置をpointsに登録する
   const setNewPoints = (event: MouseEvent) => {
@@ -120,6 +159,8 @@ export default function IconicElement({
       }
     });
   };
+
+  console.log(alignedId);
 
   switch (iconicElementShape) {
     case "circle":
@@ -159,21 +200,34 @@ export default function IconicElement({
             open={!!pathMenuAnchorEl}
             onClose={handlePathMenuClose}
           >
-            {listNames.map((listName) => (
+            {listInfos.map((info) => (
               <MenuItem
                 onClick={() => {
-                  updateIconicElement({
-                    ...info,
-                    alignedListId: listName.id,
-                  });
+                  setAlignedId(info.id);
+                  setAlignedType("list");
 
                   handlePathMenuClose();
                   handleMenuClose();
                   startPathMake();
                 }}
-                key={listName.id}
+                key={info.id}
               >
-                {listName.name}
+                {info.name}
+              </MenuItem>
+            ))}
+            {functionInfos.map((info) => (
+              <MenuItem
+                onClick={() => {
+                  setAlignedId(info.id);
+                  setAlignedType("function");
+
+                  handlePathMenuClose();
+                  handleMenuClose();
+                  startPathMake();
+                }}
+                key={info.id}
+              >
+                {info.name}
               </MenuItem>
             ))}
           </Menu>
