@@ -21,6 +21,7 @@ import {
   SMALL_HEIGHT,
   SMALL_WIDTH,
 } from "../constants/sizes/function";
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 interface SideMenuProps {
   onIconicElementButtonClicked: (
@@ -28,12 +29,14 @@ interface SideMenuProps {
   ) => void;
   onListButtonClicked: (listShape: ListShape) => void;
   onFunctionButtonClicked: (functionShape: FunctionShape) => void;
+  onClearButtonClicked: () => void;
 }
 
 function SideMenu({
   onIconicElementButtonClicked,
   onListButtonClicked,
   onFunctionButtonClicked,
+  onClearButtonClicked,
 }: SideMenuProps) {
   return (
     <Drawer
@@ -159,6 +162,24 @@ function SideMenu({
           />
         </Button>
       </Box>
+
+      <Divider />
+
+      <Box sx={{ py: 2, display: "flex", flexDirection: "column" }}>
+        <Typography sx={{ mr: 1, mb: 1, fontWeight: "bold" }}>
+          Canvas
+        </Typography>
+        <Button sx={{ height: "40px" }} onClick={onClearButtonClicked}>
+          <HighlightOffIcon
+            sx={{
+              width: "30px",
+              height: "30px",
+              margin: "6px 0",
+            }}
+          />{" "}
+          <Typography sx={{ ml: 1, fontWeight: "bold" }}>clear</Typography>
+        </Button>
+      </Box>
     </Drawer>
   );
 }
@@ -198,7 +219,7 @@ export interface FunctionInfo {
   caluclationType: CalculationType;
 }
 
-export default function Field() {
+export default function Field({ clear }: { clear: () => void }) {
   const [iconicElementInfos, setIconicElementInfos] = useState<
     IconicElementInfo[]
   >([]);
@@ -361,6 +382,10 @@ export default function Field() {
       has: [],
       caluclationType: "addition",
     });
+  };
+
+  const onClearButtonClicked = () => {
+    clear();
   };
 
   // 配置的にiconicElementがlistに含まれうるかどうかを計算する
@@ -563,6 +588,7 @@ export default function Field() {
         onIconicElementButtonClicked={onIconicElementButtonClicked}
         onListButtonClicked={onListButtonClicked}
         onFunctionButtonClicked={onFunctionButtonClicked}
+        onClearButtonClicked={onClearButtonClicked}
       />
       {functionInfos.map((info) => (
         <Function
