@@ -53,6 +53,7 @@ interface Props {
     positionDiff: Position;
   }) => void;
   updateList: (listInfo: ListInfo) => void;
+  deleteList: (id: ListInfo["id"]) => void;
 }
 
 export default function List({
@@ -63,6 +64,7 @@ export default function List({
   setListAbstractionLevel,
   shiftIconicElementPosition,
   updateList,
+  deleteList,
 }: Props) {
   const onStop = (e: DraggableEvent, data: DraggableData) => {
     updateList({
@@ -233,6 +235,8 @@ export default function List({
               To Original
             </MenuItem>
           )}
+          <Divider sx={{ my: 0.5 }} />
+          <MenuItem onClick={() => deleteList(info.id)}>Delete</MenuItem>
         </Menu>
       </div>
     </Draggable>

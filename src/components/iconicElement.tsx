@@ -27,6 +27,7 @@ interface Props {
     listId_2: ListInfo["id"],
     calculationType: CalculationType
   ) => number;
+  deleteIconicElement: (id: IconicElementInfo["id"]) => void;
 }
 
 export default function IconicElement({
@@ -36,6 +37,7 @@ export default function IconicElement({
   listInfos,
   functionInfos,
   calculate,
+  deleteIconicElement,
 }: Props) {
   const onStop = (e: DraggableEvent, data: DraggableData) => {
     updateIconicElement({
@@ -77,6 +79,10 @@ export default function IconicElement({
     setPathMenuAnchorEl(null);
   };
 
+  const handleDelete = () => {
+    deleteIconicElement(info.id);
+  };
+
   const [alignedId, setAlignedId] = useState<
     ListInfo["id"] | FunctionInfo["id"] | undefined
   >(undefined);
@@ -112,7 +118,6 @@ export default function IconicElement({
     if (alignedId !== undefined) {
       const value = getValue();
       if (value !== undefined && value >= 0 && value < points.length) {
-        console.log(info.position);
         updateIconicElement({
           ...info,
           position: {
@@ -144,6 +149,7 @@ export default function IconicElement({
         );
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [alignedId, alignedType, getValue()]);
 
   // クリックした位置をpointsに登録する
@@ -201,7 +207,7 @@ export default function IconicElement({
           onClose={handleMenuClose}
         >
           <MenuItem onClick={handlePathMenuOpen}>Path</MenuItem>
-
+          <MenuItem onClick={handleDelete}>Delete</MenuItem>
           <Menu
             id="demo-customized-menu"
             MenuListProps={{

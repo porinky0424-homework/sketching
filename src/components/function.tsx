@@ -60,6 +60,7 @@ interface Props {
     listId_2: ListInfo["id"],
     calculationType: CalculationType
   ) => number;
+  deleteFunction: (id: FunctionInfo["id"]) => void;
 }
 
 export default function Function({
@@ -69,6 +70,7 @@ export default function Function({
   setFunctionName,
   setFunctionCalculationType,
   calculate,
+  deleteFunction,
 }: Props) {
   const onStop = (e: DraggableEvent, data: DraggableData) => {
     setFunctionPosition({
@@ -219,6 +221,8 @@ export default function Function({
               {calculationTypesItem}
             </MenuItem>
           ))}
+          <Divider sx={{ my: 0.5 }} />
+          <MenuItem onClick={() => deleteFunction(info.id)}>Delete</MenuItem>
         </Menu>
       </div>
     </Draggable>

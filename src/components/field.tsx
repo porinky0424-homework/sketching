@@ -580,6 +580,18 @@ export default function Field({ clear }: { clear: () => void }) {
     }
   };
 
+  const deleteIconicElement = (id: IconicElementInfo["id"]) => {
+    setIconicElementInfos((cur) => cur.filter((info) => info.id !== id));
+  };
+
+  const deleteList = (id: ListInfo["id"]) => {
+    setListInfos((cur) => cur.filter((info) => info.id !== id));
+  };
+
+  const deleteFunction = (id: FunctionInfo["id"]) => {
+    setFunctionInfos((cur) => cur.filter((info) => info.id !== id));
+  };
+
   console.log("<component>field");
 
   return (
@@ -599,6 +611,7 @@ export default function Field({ clear }: { clear: () => void }) {
           setFunctionName={setFunctionName}
           setFunctionCalculationType={setFunctionCalculationType}
           calculate={calculate}
+          deleteFunction={deleteFunction}
         />
       ))}
       {listInfos.map((info) => (
@@ -611,6 +624,7 @@ export default function Field({ clear }: { clear: () => void }) {
           setListAbstractionLevel={setListAbstractionLevel}
           shiftIconicElementPosition={shiftIconicElementPosition}
           updateList={updateList}
+          deleteList={deleteList}
         />
       ))}
       {iconicElementInfos.map((info) => {
@@ -627,6 +641,7 @@ export default function Field({ clear }: { clear: () => void }) {
               listInfos={listInfos}
               functionInfos={functionInfos}
               calculate={calculate}
+              deleteIconicElement={deleteIconicElement}
             />
           )
         );
