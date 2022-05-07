@@ -27,3 +27,5 @@ react-draggableの公式によると
 ## github pagesにデプロイ
 
 参考：　https://qiita.com/Ham4690/items/4535d744a78db9e403d7
+
+`yarn deploy`により、`build`ディレクトリをgithub pagesにデプロイできるようにした。
