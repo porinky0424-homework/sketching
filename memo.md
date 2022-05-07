@@ -24,10 +24,6 @@ react-draggableの公式によると
 
 らしいので、一旦無視する。
 
-## 進捗
+## github pagesにデプロイ
 
-- 環境構築(react with typescript, Material UI)
-- ドラッグ&ドロップできる、四角、丸のiconic elementsの作成(react-draggable)
-- ボタンを押すと1つのiconic elementsを作成できるようにした
-- listを作成できるようにした
-- listの中にiconic elementsが含まれているか判定できるようにした
+参考：　https://qiita.com/Ham4690/items/4535d744a78db9e403d7
